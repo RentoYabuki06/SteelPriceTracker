@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Material {
+  id        Int             @id @default(autoincrement())
+  name      String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime?       @updatedAt
+  typeId    Int
+  type      MaterialType    @relation(fields: [typeId], references: [id])
+  prices    MaterialPrice[]
+}
+
+model MaterialType {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime?  @updatedAt
+  materials Material[]
+}
+
+model MaterialPrice {
+  id         Int       @id @default(autoincrement())
+  priceMin   Float
+  priceMax   Float
+  location   String
+  unit       String
+  date       DateTime
+  materialId Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+  material   Material  @relation(fields: [materialId], references: [id])
+} 
