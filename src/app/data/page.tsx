@@ -1,13 +1,13 @@
 'use client'
 import { prisma } from '@/lib/prisma';
-import { Material, MaterialPrice } from '@prisma/client';
+import type { Material, MaterialPrice } from '@prisma/client';
 
 type MaterialWithRelations = Material & {
   type: { name: string };
   prices: MaterialPrice[];
 };
 
-async function getMaterialData() {
+async function getMaterialData(): Promise<MaterialWithRelations[]> {
   try {
     const materials = await prisma.material.findMany({
       include: {
@@ -66,7 +66,7 @@ export default async function DataPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                      {material.prices.map((price) => (
+                      {material.prices.map((price: MaterialPrice) => (
                         <tr key={price.id}>
                           <td className="px-4 py-2">
                             {new Date(price.date).toLocaleDateString('ja-JP')}

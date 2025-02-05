@@ -7,10 +7,10 @@ async function fixDuplicates() {
   const types = await prisma.materialType.findMany();
   
   // 2. 重複を確認
-  const nameCount = types.reduce((acc, type) => {
+  const nameCount = types.reduce((acc: Record<string, number>, type: { name: string }) => {
     acc[type.name] = (acc[type.name] || 0) + 1;
     return acc;
-  }, {} as Record<string, number>);
+  }, {});
   
   // 3. 重複があれば最新のもの以外を削除
   for (const name in nameCount) {
